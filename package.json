@@ -1,0 +1,22 @@
+{
+  "name": "fireiron-video",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "dependencies": {
+    "axios": "^1.7.3",
+    "ffmpeg-static": "^5.2.0",
+    "fireiron": "../fireiron-node",
+    "sharp": "^0.33.4",
+    "typescript": "^5.6.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.7.5"
+  }
+}
