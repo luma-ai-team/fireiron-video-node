@@ -16,7 +16,7 @@ export type PikaPredictOptions = {
     video?: string;
     image?: string;
     model?: string;
-    webhookOverride: string;
+    webhookOverride?: string;
 };
 
 export type PikaPredictResponse = {
