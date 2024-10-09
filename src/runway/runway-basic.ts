@@ -1,4 +1,4 @@
-import { RunwayPredictOptions, RunwayPredictResponse, RunwayProvider } from "./runway-provider";
+import { RunwayCropSize, RunwayPredictOptions, RunwayPredictResponse, RunwayProvider } from "./runway-provider";
 import { PredictionCompletionEvent, PredictionEvent, PredictionState, Prediction } from "fireiron";
 import { FirestoreAdapter } from "fireiron";
 import { StorageAdapter } from "fireiron";
@@ -24,10 +24,7 @@ export type BasicRunwayInput = {
 };
 
 export interface RunwayMetadata {
-    cropSize: {
-        width: number;
-        height: number;
-    };
+    cropSize: RunwayCropSize;
 }
 
 export class BasicRunwayProvider extends RunwayProvider<BasicRunwayInput> {
@@ -106,6 +103,8 @@ export class BasicRunwayProvider extends RunwayProvider<BasicRunwayInput> {
 
     async cropPredictionVideo(event: PredictionCompletionEvent, userIdentifier: string): Promise<PredictionCompletionEvent> {
         const prediction = await this.firestore.fetchPrediction(userIdentifier, event.identifier);
+        console.log(prediction);
+        
         const cropSize = (prediction.metadata as RunwayMetadata).cropSize;
         if (cropSize == null) {
             return event;
