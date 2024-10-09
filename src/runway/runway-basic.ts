@@ -65,7 +65,7 @@ export class BasicRunwayProvider extends RunwayProvider<BasicRunwayInput> {
             fit: "contain"
         }).toFile(outputPath);
 
-        input.img_prompt = await this.storage.upload(outputPath, uuid());
+        input.img_prompt = await this.storage.upload(outputPath, `${uuid()}.jpg`);
         this.storage.cleanup();
 
         var options: RunwayPredictOptions = {
