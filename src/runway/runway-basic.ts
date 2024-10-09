@@ -76,6 +76,8 @@ export class BasicRunwayProvider extends RunwayProvider<BasicRunwayInput> {
         await image.resize(1280, 768, {
             fit: "contain"
         }).toFile(outputPath);
+
+        input.img_prompt = await this.storage.upload(outputPath, inputFilename);
         this.storage.cleanup();
 
         return {
@@ -102,6 +104,8 @@ export class BasicRunwayProvider extends RunwayProvider<BasicRunwayInput> {
 
     async cropPredictionVideo(event: PredictionCompletionEvent, userIdentifier: string): Promise<PredictionCompletionEvent> {
         const prediction = await this.firestore.fetchPrediction(userIdentifier, event.identifier);
+        console.log(prediction);
+        
         const cropSize = (prediction.metadata as RunwayMetadata).cropSize;
         if (cropSize == null) {
             return event;
