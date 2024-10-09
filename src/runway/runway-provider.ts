@@ -1,13 +1,20 @@
 import { Prediction, PredictionProvider, PredictionState, PredictionEvent } from "fireiron";
 import axios, { Axios } from "axios"
 
+export type RunwayCropSize = {
+    width: number;
+    height: number;
+};
+
 export type RunwayPredictOptions = {
     path: string;
+    cropSize: RunwayCropSize;
     body: any;
 };
 
 export type RunwayPredictResponse = {
     uuid: string;
+    cropSize: RunwayCropSize;
 };
 
 export type RunwayStatus = "success" | "failed" | string;

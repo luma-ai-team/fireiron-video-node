@@ -8,6 +8,7 @@ const exec = util.promisify(require('child_process').exec);
 
 import Sharp from "sharp"
 import ffmpegPath from "ffmpeg-static";
+import { v4 as uuid } from "uuid";
 
 export type RunwayModel = "gen2" | "gen3";
 
@@ -40,19 +41,6 @@ export class BasicRunwayProvider extends RunwayProvider<BasicRunwayInput> {
     }
 
     public async makeRunwayOptions(userIdentifier: string, input: BasicRunwayInput): Promise<RunwayPredictOptions> {
-        var options: RunwayPredictOptions = {
-            path: "/runway/generate/imageDescription",
-            body: input
-        };
-
-        if (input.text_prompt == null) {
-            options.path = "/runway/generate/image";
-        }
-
-        return options;
-    }
-
-    public async makePrediction(input: BasicRunwayInput, output: RunwayPredictResponse): Promise<Prediction> {
         const inputURL = new URL(input.img_prompt);
         const inputFilename = inputURL.pathname.split('/').pop() ?? "input.jpg";
         const path = await this.storage.downloadTemporaryCopy(inputURL.toString(), inputFilename);
@@ -77,14 +65,28 @@ export class BasicRunwayProvider extends RunwayProvider<BasicRunwayInput> {
             fit: "contain"
         }).toFile(outputPath);
 
-        input.img_prompt = await this.storage.upload(outputPath, inputFilename);
+        input.img_prompt = await this.storage.upload(outputPath, uuid());
         this.storage.cleanup();
 
+        var options: RunwayPredictOptions = {
+            path: "/runway/generate/imageDescription",
+            cropSize: cropSize,
+            body: input
+        };
+
+        if (input.text_prompt == null) {
+            options.path = "/runway/generate/image";
+        }
+
+        return options;
+    }
+
+    public async makePrediction(input: BasicRunwayInput, output: RunwayPredictResponse): Promise<Prediction> {
         return {
             identifier: output.uuid,
             input: input,
             metadata: {
-                cropSize: cropSize
+                cropSize: output.cropSize
             }
         };
     }
