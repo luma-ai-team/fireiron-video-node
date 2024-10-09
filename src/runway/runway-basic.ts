@@ -104,8 +104,6 @@ export class BasicRunwayProvider extends RunwayProvider<BasicRunwayInput> {
 
     async cropPredictionVideo(event: PredictionCompletionEvent, userIdentifier: string): Promise<PredictionCompletionEvent> {
         const prediction = await this.firestore.fetchPrediction(userIdentifier, event.identifier);
-        console.log(prediction);
-        
         const cropSize = (prediction.metadata as RunwayMetadata).cropSize;
         if (cropSize == null) {
             return event;
