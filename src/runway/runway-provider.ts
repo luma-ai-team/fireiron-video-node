@@ -14,7 +14,7 @@ export type RunwayPredictOptions = {
 
 export type RunwayPredictResponse = {
     uuid: string;
-    cropSize: RunwayCropSize;
+    cropSize?: RunwayCropSize;
 };
 
 export type RunwayStatus = "success" | "failed" | string;
@@ -49,6 +49,8 @@ export abstract class RunwayProvider<Input> implements PredictionProvider<Input>
 
         const response = await this.client.post(options.path, body);
         const data: RunwayPredictResponse = response.data;
+        data.cropSize = options.cropSize;
+        
         return await this.makePrediction(input, data);
     }
 
